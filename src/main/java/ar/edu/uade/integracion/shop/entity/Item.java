@@ -6,7 +6,7 @@ import java.util.List;
 public class Item {
 
     @Id
-    private String id;
+    private int id;
     private User publisher;
     private float price;
     private String name;
@@ -14,7 +14,7 @@ public class Item {
     private List<String> photos;
 
 
-    public Item(String id, User publisher, float price, String name, String description, List<String> photos) {
+    public Item(int id, User publisher, float price, String name, String description, List<String> photos) {
         this.id = id;
         this.publisher = publisher;
         this.price = price;
@@ -23,11 +23,11 @@ public class Item {
         this.photos = photos;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
