@@ -7,20 +7,30 @@ public class Item {
 
     @Id
     private int id;
-    private User publisher;
+    private User seller;
     private float price;
     private String name;
     private String description;
     private List<String> photos;
+    private float weight;
+    private Warranty warranty;
+    private Category category;
 
-
-    public Item(int id, User publisher, float price, String name, String description, List<String> photos) {
+    public Item(int id, User seller, float price, String name, String description, float weight) {
         this.id = id;
-        this.publisher = publisher;
+        this.seller = seller;
         this.price = price;
         this.name = name;
         this.description = description;
-        this.photos = photos;
+        this.weight = weight;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
     public int getId() {
@@ -31,12 +41,12 @@ public class Item {
         this.id = id;
     }
 
-    public User getPublisher() {
-        return publisher;
+    public User getSeller() {
+        return seller;
     }
 
-    public void setPublisher(User publisher) {
-        this.publisher = publisher;
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 
     public float getPrice() {
