@@ -22,4 +22,15 @@ public class OrderController {
     public ResponseEntity<String> createItem(@RequestBody Order order) {
         return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/orders/", method = RequestMethod.GET)
+    public ResponseEntity<Order> getOrders(
+            @RequestParam(value = "userId",required = true) int userId,
+            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+    ) {
+        Item item = new Item(1, new User(), 1, "name", "desc", 1);
+        return new ResponseEntity<>(new Order(item, 1, new Address(), new User()), HttpStatus.OK);
+    }
+
 }
