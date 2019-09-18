@@ -1,5 +1,7 @@
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
   datasource:
     url: jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_4ee79de4437b98f
     username: bd7ef58e513648
