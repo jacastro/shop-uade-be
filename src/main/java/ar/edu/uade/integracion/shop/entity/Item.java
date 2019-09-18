@@ -25,6 +25,22 @@ public class Item {
         this.weight = weight;
     }
 
+    public Warranty getWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(Warranty warranty) {
+        this.warranty = warranty;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public float getWeight() {
         return weight;
     }

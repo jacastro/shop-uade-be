@@ -10,10 +10,24 @@ public class ItemDto {
     private String name;
     private String description;
     private List<String> photos;
-    // TODO : make it ENUM
     private Warranty warranty;
     private Category category;
 
+    public Warranty getWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(Warranty warranty) {
+        this.warranty = warranty;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public int getId() {
         return id;
