@@ -11,7 +11,7 @@ public class ItemDto {
     private String description;
     private List<String> photos;
     // TODO : make it ENUM
-    private String warranty;
+    private Warranty warranty;
     private Category category;
 
 
