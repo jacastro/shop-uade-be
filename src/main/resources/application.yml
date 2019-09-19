@@ -1,8 +1,17 @@
 
 spring:
-  datasource:
-    url: jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_4ee79de4437b98f
-    username: bd7ef58e513648
-    password: 57d4a8d7
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
+  h2:
+    console:
+      enabled: true
+  #datasource:
+   # url: jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_4ee79de4437b98f
+   # username: bd7ef58e513648
+   # password: 57d4a8d7
+   # driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: create-drop
+sso:
+ tenant-id: 380f7247-c8e7-4036-b81f-29e2d7a6282f
+ key: 4042eda28c764cf8900545b1d779cd35
