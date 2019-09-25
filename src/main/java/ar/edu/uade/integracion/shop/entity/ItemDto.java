@@ -4,9 +4,9 @@ import java.util.List;
 
 public class ItemDto {
 
-    private int id;
+    private Integer id;
     private UserDto seller;
-    private float price;
+    private Double price;
     private String name;
     private String description;
     private List<String> photos;
@@ -29,11 +29,11 @@ public class ItemDto {
         this.category = category;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -45,11 +45,11 @@ public class ItemDto {
         this.seller = seller;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

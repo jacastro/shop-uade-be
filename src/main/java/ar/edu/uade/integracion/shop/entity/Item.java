@@ -1,28 +1,38 @@
 package ar.edu.uade.integracion.shop.entity;
 
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Item {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @ManyToOne
     private User seller;
-    private float price;
+    private Double price;
     private String name;
     private String description;
+    @ElementCollection
     private List<String> photos;
-    private float weight;
+    private Double weight;
+    @Enumerated(EnumType.STRING)
     private Warranty warranty;
+    @Enumerated(EnumType.STRING)
     private Category category;
 
-    public Item(int id, User seller, float price, String name, String description, float weight) {
+    public Item(Integer id, User seller, Double price, String name, String description, Double weight) {
         this.id = id;
         this.seller = seller;
         this.price = price;
         this.name = name;
         this.description = description;
         this.weight = weight;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Warranty getWarranty() {
@@ -41,11 +51,11 @@ public class Item {
         this.category = category;
     }
 
-    public float getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
@@ -65,11 +75,11 @@ public class Item {
         this.seller = seller;
     }
 
-    public float getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
