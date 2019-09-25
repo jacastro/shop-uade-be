@@ -50,12 +50,8 @@ public class Item {
         this.weight = weight;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public User getSeller() {

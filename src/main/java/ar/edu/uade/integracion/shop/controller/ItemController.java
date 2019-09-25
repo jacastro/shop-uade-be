@@ -1,5 +1,6 @@
 package ar.edu.uade.integracion.shop.controller;
 
+import ar.edu.uade.integracion.shop.entity.Category;
 import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.ItemDto;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
@@ -42,7 +43,7 @@ public class ItemController {
         Pageable pageable = PageRequest.of(page, limit);
         List<Item> items;
         if (q != null) {
-            items = repository.findByNameIsLikeOrDescriptionIsLike(q, q, pageable);
+            items = repository.findByNameContainsOrDescriptionContains(q, q, pageable);
         } else {
             items = repository.findAll(pageable).getContent();
         }
@@ -53,10 +54,20 @@ public class ItemController {
     public ResponseEntity<ItemDto> getItem(@PathVariable Integer id) {
         Optional<Item> item = repository.findById(id);
         if (item.isPresent()) {
-            return new ResponseEntity<>(mapper.map(item, ItemDto.class), HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(item.get(), ItemDto.class), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @RequestMapping(value = "/items/category/{category}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<ItemDto>> getUserItems(
+            @RequestParam(required = false, defaultValue = "100") int limit,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @PathVariable Category category
+    ) {
+        return new ResponseEntity<>(mapper.mapAsList(repository.findByCategory(category, PageRequest.of(page, limit)),
+                ItemDto.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/items/seller/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -72,8 +83,14 @@ public class ItemController {
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<String> createItem(@RequestBody ItemDto item) {
-        repository.save(mapper.map(item, Item.class));
-        return new ResponseEntity<>("Created", HttpStatus.OK);
+    public ItemDto createItem(@RequestBody ItemDto item) {
+        Item model = mapper.map(item, Item.class);
+        model.setId(null);
+        return mapper.map(repository.save(model), ItemDto.class);
+    }
+
+    @RequestMapping(value = "/items", method = RequestMethod.PUT, produces = "application/json")
+    public ItemDto updateItem(@RequestBody ItemDto item) {
+        return mapper.map(repository.save(mapper.map(item, Item.class)), ItemDto.class);
     }
 }
