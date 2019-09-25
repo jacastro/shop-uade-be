@@ -15,7 +15,7 @@ import java.util.List;
 public class WarrantyController {
 
     @GetMapping("/")
-    public List<Warranty> getCategories() {
+    public List<Warranty> getWarranties() {
         return Arrays.asList(Warranty.values());
     }
 }
