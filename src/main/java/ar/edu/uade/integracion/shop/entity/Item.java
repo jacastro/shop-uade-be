@@ -22,15 +22,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    public Item(Integer id, User seller, Double price, String name, String description, Double weight) {
-        this.id = id;
-        this.seller = seller;
-        this.price = price;
-        this.name = name;
-        this.description = description;
-        this.weight = weight;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }

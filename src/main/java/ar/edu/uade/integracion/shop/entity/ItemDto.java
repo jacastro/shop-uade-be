@@ -13,7 +13,31 @@ public class ItemDto {
     // TODO : make it ENUM
     private String warranty;
     private Category category;
+    private Double weight;
 
+    public String getWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(String warranty) {
+        this.warranty = warranty;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
 
     public Integer getId() {
         return id;
