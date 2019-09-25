@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 public class ItemController {
     private ItemRepository repository;
     private UserRepository userRepository;

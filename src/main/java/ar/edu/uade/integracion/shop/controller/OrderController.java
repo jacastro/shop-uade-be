@@ -1,15 +1,13 @@
 package ar.edu.uade.integracion.shop.controller;
 
-import ar.edu.uade.integracion.shop.entity.Address;
-import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.Order;
-import ar.edu.uade.integracion.shop.entity.User;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 public class OrderController {
 
     private OrderRepository repository;

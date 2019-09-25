@@ -10,6 +10,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "user")
 public class UserController {
     private UserRepository repository;
