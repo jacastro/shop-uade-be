@@ -2,49 +2,78 @@ package ar.edu.uade.integracion.shop.controller;
 
 import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.ItemDto;
-import ar.edu.uade.integracion.shop.entity.User;
+import ar.edu.uade.integracion.shop.repository.ItemRepository;
+import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ItemController {
+    private ItemRepository repository;
+    private UserRepository userRepository;
+    private MapperFacade mapper;
 
+    public ItemController(ItemRepository repository, UserRepository userRepository) {
+        this.repository = repository;
+        this.userRepository = userRepository;
+
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+
+        mapperFactory.classMap(Item.class, ItemDto.class).byDefault().register();
+        mapper = mapperFactory.getMapperFacade();
+    }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<ItemDto>> getItems(
-            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit,
-            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+            @RequestParam(required = false, defaultValue = "100") int limit,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false) String q
     ) {
-        ArrayList<ItemDto> list = new ArrayList<>();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, limit);
+        List<Item> items;
+        if (q != null) {
+            items = repository.findByNameIsLikeOrDescriptionIsLike(q, q, pageable);
+        } else {
+            items = repository.findAll(pageable).getContent();
+        }
+        return new ResponseEntity<>(mapper.mapAsList(items, ItemDto.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/items/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<ItemDto>> getItem(
-            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit,
-            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
-    ) {
-        User user = new User();
-        ArrayList<ItemDto> list = new ArrayList<>();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    public ResponseEntity<ItemDto> getItem(@PathVariable Integer id) {
+        Optional<Item> item = repository.findById(id);
+        if (item.isPresent()) {
+            return new ResponseEntity<>(mapper.map(item, ItemDto.class), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/items/seller/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<ItemDto>> getUserItems(
-            @PathVariable("id") int id,
-            @RequestParam(value = "limit", required = false, defaultValue = "100") int limit,
-            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+            @RequestParam(required = false, defaultValue = "100") int limit,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @PathVariable Integer id
     ) {
-        ArrayList<ItemDto> list = new ArrayList<>();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page, limit);
+        final List<Item> items = new ArrayList<>();
+        userRepository.findById(id).ifPresent(u -> items.addAll(repository.findBySeller(u, pageable)));
+        return new ResponseEntity<>(mapper.mapAsList(items, ItemDto.class), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.POST,produces = "application/json")
-    public ResponseEntity<String>  createItem(@RequestBody ItemDto item) {
+    @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<String> createItem(@RequestBody ItemDto item) {
+        repository.save(mapper.map(item, Item.class));
         return new ResponseEntity<>("Created", HttpStatus.OK);
     }
 }

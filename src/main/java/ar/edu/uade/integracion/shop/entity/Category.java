@@ -8,9 +8,9 @@ public enum  Category {
     CAT3(3, "Categoria3");
 
     private String name;
-    private int id;
+    private Integer id;
 
-    Category(int id, String name) {
+    Category(Integer id, String name) {
         this.name = name;
         this.id = id;
     }
@@ -24,7 +24,7 @@ public enum  Category {
         throw new Exception("Not found");
     }
 
-    public static Category fromId(int id) throws Exception {
+    public static Category fromId(Integer id) throws Exception {
         for (Category category : Category.values()) {
             if (category.getId() == id) {
                 return category;
@@ -37,5 +37,5 @@ public enum  Category {
         return name;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
 }

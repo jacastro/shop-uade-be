@@ -1,24 +1,31 @@
 package ar.edu.uade.integracion.shop.entity;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @OneToOne
     private Item item;
     private Integer quantity;
-    private float total;
+    private Double total;
     private Integer shippingId;
+    @OneToOne
     private Address address;
+    @OneToOne
     private User buyer;
     private Date date;
 
-    public Order(Item item, Integer quantity, Address address, User buyer) {
-        this.item = item;
-        this.quantity = quantity;
-        this.address = address;
-        this.buyer = buyer;
-        this.total = this.item.getPrice() * this.quantity;
-        this.date  = new Date();
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Item getItem() {
@@ -37,11 +44,11 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public float getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(float total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
