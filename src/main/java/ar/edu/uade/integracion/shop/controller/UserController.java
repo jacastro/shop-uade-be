@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public UserDto getUser(@PathVariable Integer id) {
+    public UserDto getUser(@PathVariable String id) {
         return mapper.map(repository.findById(id).orElseThrow(UserNotFoundException::new), UserDto.class);
     }
 
