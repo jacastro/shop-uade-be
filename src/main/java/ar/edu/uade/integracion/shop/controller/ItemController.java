@@ -75,7 +75,7 @@ public class ItemController {
     public ResponseEntity<List<ItemDto>> getUserItems(
             @RequestParam(required = false, defaultValue = "100") int limit,
             @RequestParam(required = false, defaultValue = "0") int page,
-            @PathVariable Integer id
+            @PathVariable String id
     ) {
         Pageable pageable = PageRequest.of(page, limit);
         final List<Item> items = new ArrayList<>();
