@@ -5,6 +5,8 @@ import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.ItemDto;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -20,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
+@Api(value = "/items", tags = "Items", description = "Items management")
 public class ItemController {
     private ItemRepository repository;
     private UserRepository userRepository;
@@ -35,6 +38,8 @@ public class ItemController {
         mapper = mapperFactory.getMapperFacade();
     }
 
+
+    @ApiOperation(value = "Retrieves items that are available for sale")
     @RequestMapping(value = "/items", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<ItemDto>> getItems(
             @RequestParam(required = false, defaultValue = "100") int limit,
@@ -51,6 +56,7 @@ public class ItemController {
         return new ResponseEntity<>(mapper.mapAsList(items, ItemDto.class), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Retrieves a specific item", response = ItemDto.class)
     @RequestMapping(value = "/items/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<ItemDto> getItem(@PathVariable Integer id) {
         Optional<Item> item = repository.findById(id);
@@ -61,6 +67,7 @@ public class ItemController {
         }
     }
 
+    @ApiOperation(value = "Retrieves the items of a specific category")
     @RequestMapping(value = "/items/category/{category}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<ItemDto>> getUserItems(
             @RequestParam(required = false, defaultValue = "100") int limit,
@@ -71,6 +78,7 @@ public class ItemController {
                 ItemDto.class), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Retrieves the items published by a specific user")
     @RequestMapping(value = "/items/seller/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<ItemDto>> getUserItems(
             @RequestParam(required = false, defaultValue = "100") int limit,
@@ -83,6 +91,7 @@ public class ItemController {
         return new ResponseEntity<>(mapper.mapAsList(items, ItemDto.class), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Create a item")
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
     public ItemDto createItem(@RequestBody ItemDto item) {
         Item model = mapper.map(item, Item.class);
@@ -90,6 +99,7 @@ public class ItemController {
         return mapper.map(repository.save(model), ItemDto.class);
     }
 
+    @ApiOperation(value = "Updates a item")
     @RequestMapping(value = "/items", method = RequestMethod.PUT, produces = "application/json")
     public ItemDto updateItem(@RequestBody ItemDto item) {
         return mapper.map(repository.save(mapper.map(item, Item.class)), ItemDto.class);

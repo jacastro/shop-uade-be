@@ -1,7 +1,10 @@
 package ar.edu.uade.integracion.shop.entity;
 
+import io.swagger.annotations.ApiModel;
+
 import java.util.List;
 
+@ApiModel(description = "Item details")
 public class ItemDto {
 
     private Integer id;

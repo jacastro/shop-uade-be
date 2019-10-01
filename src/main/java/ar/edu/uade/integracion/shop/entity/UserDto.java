@@ -1,5 +1,8 @@
 package ar.edu.uade.integracion.shop.entity;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "User details")
 public class UserDto {
 
     private String id;

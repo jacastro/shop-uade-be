@@ -1,7 +1,10 @@
 package ar.edu.uade.integracion.shop.entity;
 
+import io.swagger.annotations.ApiModel;
+
 import java.util.Date;
 
+@ApiModel(description = "Order details")
 public class OrderDto {
     private Integer id;
     private Integer itemId;

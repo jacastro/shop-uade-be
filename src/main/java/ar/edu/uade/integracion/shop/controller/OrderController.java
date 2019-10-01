@@ -6,6 +6,8 @@ import ar.edu.uade.integracion.shop.repository.AddressRepository;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.Date;
 
 @RestController
 @CrossOrigin
+@Api(value = "/orders", tags = "Orders", description = "Orders Management")
 public class OrderController {
 
     private OrderRepository repository;
@@ -29,12 +32,14 @@ public class OrderController {
         this.addressRepository = addressRepository;
     }
 
+    @ApiOperation(value = "Retrieves a specific order")
     @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
     public ResponseEntity<OrderDto> getItem(@PathVariable Integer id) {
         return repository.findById(id).map(o -> new ResponseEntity<>(map(o), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @ApiOperation(value = "Creates a order")
     @RequestMapping(value = "/orders/", method = RequestMethod.POST)
     public void createItem(@RequestBody OrderDto order) {
         repository.save(map(order));
