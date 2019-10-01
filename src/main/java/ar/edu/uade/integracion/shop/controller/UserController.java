@@ -1,28 +1,40 @@
 package ar.edu.uade.integracion.shop.controller;
 
-import ar.edu.uade.integracion.shop.service.UserService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import ar.edu.uade.integracion.shop.entity.User;
+import ar.edu.uade.integracion.shop.entity.UserDto;
+import ar.edu.uade.integracion.shop.exception.UserNotFoundException;
+import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = "user")
 public class UserController {
-    private UserService service;
+    private UserRepository repository;
+    private MapperFacade mapper;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserRepository repository) {
+        this.repository = repository;
+
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+
+        mapperFactory.classMap(User.class, UserDto.class).byDefault().register();
+        mapper = mapperFactory.getMapperFacade();
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public void login(String username, String password){
-        service.loginUser(username, password);
+    @GetMapping("{id}")
+    public UserDto getUser(@PathVariable String id) {
+        return mapper.map(repository.findById(id).orElseThrow(UserNotFoundException::new), UserDto.class);
     }
 
-    @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public String logout(){
-        //hay servicio de logout?
-        return "logout";
+    @PostMapping
+    public void createUser(UserDto dto){
+        User model = mapper.map(dto, User.class);
+
+        repository.save(model);
     }
 
 }

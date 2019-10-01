@@ -13,7 +13,7 @@ import java.util.List;
 public interface ItemRepository extends PagingAndSortingRepository<Item, Integer> {
     List<Item> findBySeller(User seller, Pageable pageable);
 
-    List<Item> findByNameIsLikeOrDescriptionIsLike(String name, String description, Pageable pageable);
+    List<Item> findByNameContainsOrDescriptionContains(String name, String description, Pageable pageable);
 
     List<Item> findByCategory(Category category, Pageable pageable);
 }

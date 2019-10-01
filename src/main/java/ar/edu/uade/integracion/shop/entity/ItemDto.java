@@ -12,6 +12,7 @@ public class ItemDto {
     private List<String> photos;
     private Warranty warranty;
     private Category category;
+    private Double weight;
 
     public Warranty getWarranty() {
         return warranty;
@@ -27,6 +28,14 @@ public class ItemDto {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
     public Integer getId() {

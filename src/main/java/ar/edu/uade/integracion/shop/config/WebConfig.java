@@ -22,4 +22,5 @@ public class WebConfig implements WebMvcConfigurer {
         builder.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
     }
+
 }

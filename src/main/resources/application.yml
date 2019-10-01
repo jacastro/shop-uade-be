@@ -1,10 +1,22 @@
-
 spring:
+  profiles: heroku
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
   datasource:
     url: jdbc:mysql://us-cdbr-iron-east-02.cleardb.net/heroku_4ee79de4437b98f
     username: bd7ef58e513648
     password: 57d4a8d7
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+---
+
+spring:
+  profiles: local
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
