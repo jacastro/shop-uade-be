@@ -5,7 +5,8 @@ public enum  Category {
     // TODO > Agregar las categorias.
     ELECTRODOMESTICOS(1, "Electrodomesticos"),
     MUEBLES(2, "Muebles"),
-    MODA(3, "Moda");
+    MODA(3, "Moda"),
+    CELULARES(4, "Celulares");
 
     private String name;
     private Integer id;
