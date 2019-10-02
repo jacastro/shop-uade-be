@@ -66,9 +66,9 @@ public class OrderController {
         repository.save(map(order));
     }
 
-    private Order map(OrderDto dto){
+    private Order map(OrderDto dto) {
         Order model = new Order();
-        if(dto.getAddress()!=null) {
+        if (dto.getAddress() != null) {
             model.setAddress(addressRepository.findById(dto.getAddress()).orElseThrow(
                     RuntimeException::new));
         }
@@ -79,12 +79,12 @@ public class OrderController {
                 RuntimeException::new));
         model.setQuantity(dto.getQuantity());
         //model.setShippingId(); -> hay que llamar al servicio de los otros pibes
-        model.setTotal(dto.getTotal()); //esto es muy falopa
+        model.setTotal(model.getItem().getPrice() * model.getQuantity()); 
 
         return model;
     }
 
-    private OrderDto map(Order model){
+    private OrderDto map(Order model) {
         OrderDto dto = new OrderDto();
         dto.setAddress(model.getAddress().getId());
         dto.setDate(model.getDate());
