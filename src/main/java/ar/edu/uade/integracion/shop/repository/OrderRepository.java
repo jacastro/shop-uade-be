@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Integer> {
 
-    Optional<Order> findByBuyer(User buyer);
+    List<Order> findByBuyer(User buyer);
 
-    Optional<Order> findByItemSeller(User seller);
+    List<Order> findByItemSeller(User seller);
 
 }

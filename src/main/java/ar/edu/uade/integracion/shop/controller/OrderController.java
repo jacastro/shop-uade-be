@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -45,19 +46,17 @@ public class OrderController {
 
     @ApiOperation(value = "Retrieves the items purchased by a user")
     @RequestMapping(value = "/orders/buyer/{id}", method = RequestMethod.GET)
-    public ResponseEntity<OrderDto> getByBuyer(@PathVariable String id) {
+    public List<OrderDto> getByBuyer(@PathVariable String id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        return repository.findByBuyer(user).map(o -> new ResponseEntity<>(map(o), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return repository.findByBuyer(user).stream().map(o -> map(o)).collect(Collectors.toList());
     }
 
 
     @ApiOperation(value = "Retrieves the items sold by a user")
     @RequestMapping(value = "/orders/seller/{id}", method = RequestMethod.GET)
-    public ResponseEntity<OrderDto> getBySeller(@PathVariable String id) {
+    public List<OrderDto> getBySeller(@PathVariable String id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        return repository.findByItemSeller(user).map(o -> new ResponseEntity<>(map(o), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return repository.findByItemSeller(user).stream().map(o -> map(o)).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "Creates a order")
@@ -79,7 +78,7 @@ public class OrderController {
                 RuntimeException::new));
         model.setQuantity(dto.getQuantity());
         //model.setShippingId(); -> hay que llamar al servicio de los otros pibes
-        model.setTotal(model.getItem().getPrice() * model.getQuantity()); 
+        model.setTotal(model.getItem().getPrice() * model.getQuantity());
 
         return model;
     }
