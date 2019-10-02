@@ -3,9 +3,9 @@ package ar.edu.uade.integracion.shop.entity;
 public enum  Category {
 
     // TODO > Agregar las categorias.
-    CAT1(1, "Categoria1"),
-    CAT2(2, "Categoria2"),
-    CAT3(3, "Categoria3");
+    ELECTRODOMESTICOS(1, "Electrodomesticos"),
+    MUEBLES(2, "Muebles"),
+    MODA(3, "Moda");
 
     private String name;
     private Integer id;
