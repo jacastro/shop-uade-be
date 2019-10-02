@@ -47,8 +47,10 @@ public class OrderController {
 
     private Order map(OrderDto dto){
         Order model = new Order();
-        model.setAddress(addressRepository.findById(dto.getAddress()).orElseThrow(
-                RuntimeException::new));
+        if(dto.getAddress()!=null) {
+            model.setAddress(addressRepository.findById(dto.getAddress()).orElseThrow(
+                    RuntimeException::new));
+        }
         model.setBuyer(userRepository.findById(dto.getBuyerId()).orElseThrow(
                 RuntimeException::new));
         model.setDate(new Date());

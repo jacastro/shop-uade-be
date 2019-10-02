@@ -18,8 +18,8 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "user")
-@Api(value = "/user", tags = "User", description = "User Management")
+@RequestMapping(value = "users")
+@Api(value = "/users", tags = "Users", description = "User Management")
 public class UserController {
     private UserRepository repository;
     private AddressRepository addressRepository;
