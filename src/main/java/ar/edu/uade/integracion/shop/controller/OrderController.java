@@ -61,8 +61,8 @@ public class OrderController {
 
     @ApiOperation(value = "Creates a order")
     @RequestMapping(value = "/orders/", method = RequestMethod.POST)
-    public void createItem(@RequestBody OrderDto order) {
-        repository.save(map(order));
+    public OrderDto createItem(@RequestBody OrderDto order) {
+        return map(repository.save(map(order)));
     }
 
     private Order map(OrderDto dto) {
