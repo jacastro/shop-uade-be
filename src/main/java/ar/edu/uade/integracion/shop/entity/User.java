@@ -3,6 +3,7 @@ package ar.edu.uade.integracion.shop.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,5 +39,13 @@ public class User {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public void addAddress(Address address){
+        if(addresses==null){
+            addresses = new ArrayList<>();
+        }
+
+        addresses.add(address);
     }
 }
