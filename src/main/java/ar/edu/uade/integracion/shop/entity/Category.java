@@ -6,7 +6,10 @@ public enum  Category {
     ELECTRODOMESTICOS(1, "Electrodomesticos"),
     MUEBLES(2, "Muebles"),
     MODA(3, "Moda"),
-    CELULARES(4, "Celulares");
+    CELULARES(4, "Celulares"),
+    CAT1(5, "cat1"),
+    CAT2(5, "cat2"),
+    CAT3(5, "cat3");
 
     private String name;
     private Integer id;
