@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,11 +59,18 @@ public class ItemControllerTest {
         dto.setWarranty(Warranty.NONE);
         dto.setSeller(new UserDto("1", "testu"));
         dto.setWeight(10.0);
-        
+
         when(itemRepository.findById(1)).thenReturn(Optional.of(testItem));
 
         mockMvc.perform(get("/items/1")).andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(dto)));
+    }
+
+    @Test
+    public void ifItemDoesntExistReturn404() throws Exception {
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/items/2")).andExpect(status().isNotFound());
     }
 
 }
