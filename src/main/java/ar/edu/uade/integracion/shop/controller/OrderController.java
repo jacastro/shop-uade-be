@@ -85,7 +85,9 @@ public class OrderController {
 
     private OrderDto map(Order model) {
         OrderDto dto = new OrderDto();
-        dto.setAddress(model.getAddress().getId());
+        if(model.getAddress()!=null) {
+            dto.setAddress(model.getAddress().getId());
+        }
         dto.setDate(model.getDate());
         dto.setId(model.getId());
         dto.setItemId(model.getItem().getId());
