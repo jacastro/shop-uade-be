@@ -22,6 +22,10 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    public Item() {
+        warranty = Warranty.NONE;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
