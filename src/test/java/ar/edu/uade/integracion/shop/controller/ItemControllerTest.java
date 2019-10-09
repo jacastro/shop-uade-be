@@ -61,18 +61,20 @@ public class ItemControllerTest {
     }
 
     @Test
+    public void whenSearchingByCategoryShouldReturnList() throws Exception {
+        Item testItem = createMockItem();
+        ItemDto dto = createItemDtoFromItem(testItem);
+
+        when(itemRepository.findByCategory(eq(Category.CELULARES), any())).thenReturn(Lists.newArrayList(testItem));
+
+        mockMvc.perform(get("/items/category/"+Category.CELULARES)).andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(Lists.newArrayList(dto))));
+    }
+
+    @Test
     public void gettingItemByIdShouldReturnItemInfo() throws Exception {
         Item testItem = createMockItem();
-
-        ItemDto dto = new ItemDto();
-        dto.setCategory(Category.CELULARES);
-        dto.setDescription("desc");
-        dto.setId(1);
-        dto.setName("test");
-        dto.setPrice(10.0);
-        dto.setWarranty(Warranty.NONE);
-        dto.setSeller(new UserDto("1", "testu"));
-        dto.setWeight(10.0);
+        ItemDto dto = createItemDtoFromItem(testItem);
 
         when(itemRepository.findById(1)).thenReturn(Optional.of(testItem));
 
