@@ -10,11 +10,12 @@ public class UserMock {
         User userTest = new User();
         userTest.setId("1");
         userTest.setName("testu");
+        userTest.setEmail("wow@email.com");
         return userTest;
     }
 
     public static UserDto createUserDtoFromUser(User seller) {
-        return new UserDto(seller.getId(), seller.getName());
+        return new UserDto(seller.getId(), seller.getName(), seller.getEmail());
     }
 
 }

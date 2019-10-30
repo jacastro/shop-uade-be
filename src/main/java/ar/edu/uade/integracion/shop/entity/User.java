@@ -12,9 +12,17 @@ public class User {
     @Id
     private String id;
     private String name;
+    private String email;
     @OneToMany
     private List<Address> addresses;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getId() {
         return id;

@@ -8,6 +8,7 @@ import ar.edu.uade.integracion.shop.repository.AddressRepository;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ar.edu.uade.integracion.shop.service.ClaimService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,13 +29,15 @@ public class OrderController {
     private ItemRepository itemRepository;
     private UserRepository userRepository;
     private AddressRepository addressRepository;
+    private ClaimService claimService;
 
     public OrderController(OrderRepository repository, ItemRepository itemRepository, UserRepository userRepository,
-                           AddressRepository addressRepository) {
+                           AddressRepository addressRepository, ClaimService claimService) {
         this.repository = repository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
+        this.claimService = claimService;
     }
 
     @ApiOperation(value = "Retrieves a specific order")
@@ -65,6 +69,17 @@ public class OrderController {
         return map(repository.save(map(order)));
     }
 
+    @ApiOperation(value = "Creates a claim in the claim system (external)")
+    @RequestMapping(value = "/orders/{id}/claim")
+    public ResponseEntity createClaim(@RequestBody String claim, @PathVariable Integer orderId) {
+        Optional<Order> order = repository.findById(orderId);
+        if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        order.ifPresent(o -> claimService.createClaim(orderId, claim, o.getBuyer().getEmail()));
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     private Order map(OrderDto dto) {
         Order model = new Order();
         if (dto.getAddress() != null) {
@@ -85,7 +100,7 @@ public class OrderController {
 
     private OrderDto map(Order model) {
         OrderDto dto = new OrderDto();
-        if(model.getAddress()!=null) {
+        if (model.getAddress() != null) {
             dto.setAddress(model.getAddress().getId());
         }
         dto.setDate(model.getDate());

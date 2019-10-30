@@ -9,6 +9,7 @@ import ar.edu.uade.integracion.shop.repository.AddressRepository;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ar.edu.uade.integracion.shop.service.ClaimService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -48,6 +49,8 @@ public class OrdersControllerTest {
     private UserRepository userRepository;
     @MockBean
     private AddressRepository addressRepository;
+    @MockBean
+    private ClaimService claimService;
 
     @Autowired
     private MockMvc mockMvc;
