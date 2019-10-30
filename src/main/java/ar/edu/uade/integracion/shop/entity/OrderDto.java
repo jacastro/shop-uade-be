@@ -1,8 +1,10 @@
 package ar.edu.uade.integracion.shop.entity;
 
+import ar.edu.uade.integracion.shop.entity.claims.Claim;
 import io.swagger.annotations.ApiModel;
 
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(description = "Order details")
 public class OrderDto {
@@ -14,6 +16,15 @@ public class OrderDto {
     private Integer address;
     private String buyerId;
     private Date date;
+    private List<Claim> claims;
+
+    public List<Claim> getClaims() {
+        return claims;
+    }
+
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
+    }
 
     public Integer getId() {
         return id;

@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -124,6 +125,7 @@ public class OrdersControllerTest {
         dto.setShippingId(model.getShippingId());
         dto.setTotal(model.getTotal());
         dto.setBuyerId(model.getBuyer().getId());
+        dto.setClaims(new ArrayList<>());
         return dto;
     }
 }

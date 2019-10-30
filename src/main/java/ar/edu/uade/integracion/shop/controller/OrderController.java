@@ -110,6 +110,7 @@ public class OrderController {
         dto.setShippingId(model.getShippingId());
         dto.setTotal(model.getTotal());
         dto.setBuyerId(model.getBuyer().getId());
+        dto.setClaims(claimService.getOrderClaims(model.getId()));
         return dto;
     }
 

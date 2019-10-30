@@ -1,11 +1,11 @@
-package ar.edu.uade.integracion.shop.entity;
+package ar.edu.uade.integracion.shop.entity.claims;
 
-public class Claim {
+public class NewClaim {
     private String email;
     private String descripcion;
     private Integer nroOrden;
 
-    public Claim(String email, String descripcion, Integer nroOrden) {
+    public NewClaim(String email, String descripcion, Integer nroOrden) {
         this.email = email;
         this.descripcion = descripcion;
         this.nroOrden = nroOrden;
