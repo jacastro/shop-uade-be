@@ -70,7 +70,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "Creates a claim in the claim system (external)")
-    @RequestMapping(value = "/orders/{id}/claim")
+    @RequestMapping(value = "/orders/{id}/claim", method = RequestMethod.POST)
     public ResponseEntity createClaim(@RequestBody String claim, @PathVariable Integer orderId) {
         Optional<Order> order = repository.findById(orderId);
         if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
