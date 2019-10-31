@@ -5,8 +5,9 @@ import ar.edu.uade.integracion.shop.entity.claims.ClaimStatus;
 import ar.edu.uade.integracion.shop.entity.claims.NewClaim;
 import ar.edu.uade.integracion.shop.exception.ClaimException;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClaimService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClaimService.class);
     private final static String URL = "http://integracion-aplicaciones.herokuapp.com/reclamo/tienda";
     private RestTemplate restTemplate;
 
@@ -28,6 +30,7 @@ public class ClaimService {
         try {
             restTemplate.postForEntity(URL, claim, Object.class);
         } catch (Exception e) {
+            LOGGER.error("Exception while posting claim to external system: {}", e);
             throw new ClaimException();
         }
     }
@@ -44,7 +47,8 @@ public class ClaimService {
                         ).collect(Collectors.toList()));
             }).collect(Collectors.toList());
 
-        } catch (RestClientException e) {
+        } catch (Exception e) {
+            LOGGER.error("Exception while getting claims: {}", e);
             return new ArrayList<>();
         }
     }
