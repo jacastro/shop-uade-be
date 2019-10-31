@@ -71,11 +71,11 @@ public class OrderController {
 
     @ApiOperation(value = "Creates a claim in the claim system (external)")
     @RequestMapping(value = "/orders/{id}/claim", method = RequestMethod.POST)
-    public ResponseEntity createClaim(@RequestBody String claim, @PathVariable Integer orderId) {
-        Optional<Order> order = repository.findById(orderId);
+    public ResponseEntity createClaim(@RequestBody String claim, @PathVariable Integer id) {
+        Optional<Order> order = repository.findById(id);
         if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-        order.ifPresent(o -> claimService.createClaim(orderId, claim, o.getBuyer().getEmail()));
+        order.ifPresent(o -> claimService.createClaim(id, claim, o.getBuyer().getEmail()));
 
         return new ResponseEntity(HttpStatus.OK);
     }
