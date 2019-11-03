@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -94,6 +96,11 @@ public class ItemController {
     @ApiOperation(value = "Create a item")
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
     public ItemDto createItem(@RequestBody ItemDto item) {
+        /*
+         * Forma de traer los usuarios a la vida - 
+         */
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
         Item model = mapper.map(item, Item.class);
         model.setId(null);
         return mapper.map(repository.save(model), ItemDto.class);
