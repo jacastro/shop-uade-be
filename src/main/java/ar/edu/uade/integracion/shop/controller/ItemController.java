@@ -96,11 +96,7 @@ public class ItemController {
     @ApiOperation(value = "Create a item")
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
     public ItemDto createItem(@RequestBody ItemDto item) {
-        /*
-         * Forma de traer los usuarios a la vida - 
-         */
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
+        // TODO : Valiadte user modifies his items.
         Item model = mapper.map(item, Item.class);
         model.setId(null);
         return mapper.map(repository.save(model), ItemDto.class);
@@ -109,6 +105,8 @@ public class ItemController {
     @ApiOperation(value = "Updates a item")
     @RequestMapping(value = "/items", method = RequestMethod.PUT, produces = "application/json")
     public ItemDto updateItem(@RequestBody ItemDto item) {
+        // TODO : Valiadte user modifies his items.
+
         return mapper.map(repository.save(mapper.map(item, Item.class)), ItemDto.class);
     }
 }
