@@ -9,6 +9,7 @@ import ar.edu.uade.integracion.shop.repository.AddressRepository;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ar.edu.uade.integracion.shop.service.ClaimService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -48,6 +50,8 @@ public class OrdersControllerTest {
     private UserRepository userRepository;
     @MockBean
     private AddressRepository addressRepository;
+    @MockBean
+    private ClaimService claimService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -121,6 +125,7 @@ public class OrdersControllerTest {
         dto.setShippingId(model.getShippingId());
         dto.setTotal(model.getTotal());
         dto.setBuyerId(model.getBuyer().getId());
+        dto.setClaims(new ArrayList<>());
         return dto;
     }
 }
