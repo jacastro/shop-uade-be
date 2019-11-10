@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class ClaimService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClaimService.class);
     private final static String URL = "http://integracion-aplicaciones.herokuapp.com/reclamo/tienda";
+    private final static String GET_URL = "http://integracion-aplicaciones.herokuapp.com/reclamo/orden/{id}";
     private RestTemplate restTemplate;
 
     public ClaimService() {
@@ -38,7 +39,7 @@ public class ClaimService {
     public List<Claim> getOrderClaims(Integer orderId) {
         try {
             List<ExternalClaim> externalClaims = Lists.newArrayList(restTemplate
-                    .getForEntity(URL + orderId, ExternalClaim[].class).getBody());
+                    .getForEntity(URL, ExternalClaim[].class, orderId).getBody());
 
             return externalClaims.stream().map(ec -> {
                 return new Claim(ec.getFecha(), ec.getDescripcion(),
