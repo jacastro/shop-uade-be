@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,41 +43,45 @@ public class UserController {
 
 
     @ApiOperation(value = "Retrieves the information of a user")
-    @GetMapping("{id}")
-    public UserDto getUser(@PathVariable String id) {
-        return mapper.map(repository.findById(id).orElseThrow(UserNotFoundException::new), UserDto.class);
+    @GetMapping(path = "/me")
+    public UserDto getUser() {
+        return mapper.map(repository.findById(getUserId()).orElseThrow(UserNotFoundException::new), UserDto.class);
     }
 
     @PostMapping
     @ApiOperation(value = "Creates a user")
     public void createUser(UserDto dto) {
         User model = mapper.map(dto, User.class);
-
         repository.save(model);
     }
 
-    @PostMapping(path = "/{userId}/address")
-    @ApiOperation(value = "Adds an address to a user")
-    public UserDto createAddress(@PathVariable String userId, @RequestBody Address address) {
-        Optional<User> user = repository.findById(userId);
+    @PostMapping(path = "/address")
+    @ApiOperation(value = "Adds an address to the user")
+    public UserDto createAddress(@RequestBody Address address) {
+        Optional<User> user = repository.findById(getUserId());
         checkUser(user);
-
         user.get().addAddress(address);
         addressRepository.save(address);
         return mapper.map(repository.save(user.get()), UserDto.class);
     }
 
-    @GetMapping(path = "/{userId}/address")
+    @GetMapping(path = "/address")
     @ApiOperation(value = "Gets a user address list")
-    public List<Address> getUserAddress(@PathVariable String userId) {
-        Optional<User> user = repository.findById(userId);
+    public  List<Address>  getUserAddress()
+    {
+        Optional<User> user = repository.findById(getUserId());
         checkUser(user);
         return user.get().getAddresses();
+
     }
 
     private void checkUser(Optional<User> user) {
         if (!user.isPresent()) {
             throw new UserNotFoundException();
         }
+    }
+
+    private String getUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

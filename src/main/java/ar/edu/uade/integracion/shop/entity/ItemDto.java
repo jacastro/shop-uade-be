@@ -20,7 +20,7 @@ public class ItemDto {
     public Warranty getWarranty() {
         return warranty;
     }
-
+    
     public void setWarranty(Warranty warranty) {
         this.warranty = warranty;
     }
