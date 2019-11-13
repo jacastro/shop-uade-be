@@ -20,3 +20,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG

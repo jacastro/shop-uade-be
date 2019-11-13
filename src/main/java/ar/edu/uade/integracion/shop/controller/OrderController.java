@@ -75,11 +75,19 @@ public class OrderController {
         Optional<Order> order = repository.findById(id);
         if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
 
-        order.ifPresent(o -> claimService.createClaim(id, claim, o.getBuyer().getEmail()));
-
+        order.ifPresent(o -> claimService.createClaim(id, o.getBuyer().getEmail(), claim, o.getBuyer().getName()));
+        //claimService.createClaim(id, "pepe@lala.com", "test", "sucutrule"); to test
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Gets claim from the claim system (external)")
+    @RequestMapping(value = "/orders/{id}/claim", method = RequestMethod.GET)
+    public ResponseEntity getClaim(@PathVariable Integer id) {
+        Optional<Order> order = repository.findById(id);
+        //if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return ResponseEntity.of(Optional.of(claimService.getOrderClaims(id)));
+    }
     private Order map(OrderDto dto) {
         Order model = new Order();
         if (dto.getAddress() != null) {

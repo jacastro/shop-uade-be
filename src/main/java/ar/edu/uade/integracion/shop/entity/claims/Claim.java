@@ -1,14 +1,13 @@
 package ar.edu.uade.integracion.shop.entity.claims;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Claim {
     private LocalDateTime date;
     private String description;
-    private List<ClaimStatus> statusList;
+    private ClaimStatus statusList;
 
-    public Claim(LocalDateTime date, String description, List<ClaimStatus> statusList) {
+    public Claim(LocalDateTime date, String description, ClaimStatus statusList) {
         this.date = date;
         this.description = description;
         this.statusList = statusList;
@@ -30,11 +29,11 @@ public class Claim {
         this.description = description;
     }
 
-    public List<ClaimStatus> getStatusList() {
+    public ClaimStatus getStatusList() {
         return statusList;
     }
 
-    public void setStatusList(List<ClaimStatus> statusList) {
+    public void setStatusList(ClaimStatus statusList) {
         this.statusList = statusList;
     }
 }
