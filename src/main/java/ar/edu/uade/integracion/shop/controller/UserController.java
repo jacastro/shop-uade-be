@@ -52,7 +52,6 @@ public class UserController {
     @ApiOperation(value = "Creates a user")
     public void createUser(UserDto dto) {
         User model = mapper.map(dto, User.class);
-
         repository.save(model);
     }
 
@@ -82,8 +81,7 @@ public class UserController {
         }
     }
 
-    private String getUserId()
-    {
+    private String getUserId() {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

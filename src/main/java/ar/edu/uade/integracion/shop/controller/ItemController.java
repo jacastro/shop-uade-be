@@ -3,8 +3,10 @@ package ar.edu.uade.integracion.shop.controller;
 import ar.edu.uade.integracion.shop.entity.Category;
 import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.ItemDto;
+import ar.edu.uade.integracion.shop.exception.UserWithNoPermissionException;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ar.edu.uade.integracion.shop.security.JwtAuthFilter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import ma.glasnost.orika.MapperFacade;
@@ -96,8 +98,10 @@ public class ItemController {
     @ApiOperation(value = "Create a item")
     @RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json")
     public ItemDto createItem(@RequestBody ItemDto item) {
-        // TODO : Valiadte user modifies his items.
         Item model = mapper.map(item, Item.class);
+        if (!JwtAuthFilter.isLoggedUser(model.getSeller().getId())) {
+            throw new UserWithNoPermissionException();
+        }
         model.setId(null);
         return mapper.map(repository.save(model), ItemDto.class);
     }
@@ -105,8 +109,10 @@ public class ItemController {
     @ApiOperation(value = "Updates a item")
     @RequestMapping(value = "/items", method = RequestMethod.PUT, produces = "application/json")
     public ItemDto updateItem(@RequestBody ItemDto item) {
-        // TODO : Valiadte user modifies his items.
-
-        return mapper.map(repository.save(mapper.map(item, Item.class)), ItemDto.class);
+        Item model = mapper.map(item, Item.class);
+        if (!JwtAuthFilter.isLoggedUser(model.getSeller().getId())) {
+            throw new UserWithNoPermissionException();
+        }
+        return mapper.map(repository.save(model), ItemDto.class);
     }
 }

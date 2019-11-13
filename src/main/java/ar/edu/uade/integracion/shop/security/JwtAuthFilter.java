@@ -72,4 +72,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return true;
     }
 
+    public static String getLoggedUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
+
+    public static boolean isLoggedUser(String id) {
+        return id.equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+    }
+
 }

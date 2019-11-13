@@ -4,10 +4,12 @@ import ar.edu.uade.integracion.shop.entity.Order;
 import ar.edu.uade.integracion.shop.entity.OrderDto;
 import ar.edu.uade.integracion.shop.entity.User;
 import ar.edu.uade.integracion.shop.exception.UserNotFoundException;
+import ar.edu.uade.integracion.shop.exception.UserWithNoPermissionException;
 import ar.edu.uade.integracion.shop.repository.AddressRepository;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
+import ar.edu.uade.integracion.shop.security.JwtAuthFilter;
 import ar.edu.uade.integracion.shop.service.ClaimService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,33 +53,47 @@ public class OrderController {
     @ApiOperation(value = "Retrieves the items purchased by a user")
     @RequestMapping(value = "/orders/buyer/{id}", method = RequestMethod.GET)
     public List<OrderDto> getByBuyer(@PathVariable String id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        return repository.findByBuyer(user).stream().map(o -> map(o)).collect(Collectors.toList());
+        if (JwtAuthFilter.isLoggedUser(id)) {
+            User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+            return repository.findByBuyer(user).stream().map(o -> map(o)).collect(Collectors.toList());
+        }
+        throw new UserWithNoPermissionException();
     }
-
 
     @ApiOperation(value = "Retrieves the items sold by a user")
     @RequestMapping(value = "/orders/seller/{id}", method = RequestMethod.GET)
     public List<OrderDto> getBySeller(@PathVariable String id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        return repository.findByItemSeller(user).stream().map(o -> map(o)).collect(Collectors.toList());
+        if (JwtAuthFilter.isLoggedUser(id)) {
+            User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+            return repository.findByItemSeller(user).stream().map(o -> map(o)).collect(Collectors.toList());
+        }
+        throw new UserWithNoPermissionException();
     }
 
     @ApiOperation(value = "Creates a order")
     @RequestMapping(value = "/orders/", method = RequestMethod.POST)
     public OrderDto createItem(@RequestBody OrderDto order) {
-        return map(repository.save(map(order)));
+        if (JwtAuthFilter.isLoggedUser(order.getBuyerId())) {
+            return map(repository.save(map(order)));
+        }
+        throw new UserWithNoPermissionException();
     }
 
     @ApiOperation(value = "Creates a claim in the claim system (external)")
     @RequestMapping(value = "/orders/{id}/claim", method = RequestMethod.POST)
     public ResponseEntity createClaim(@RequestBody String claim, @PathVariable Integer id) {
         Optional<Order> order = repository.findById(id);
-        if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
-
-        order.ifPresent(o -> claimService.createClaim(id, claim, o.getBuyer().getEmail()));
-
-        return new ResponseEntity(HttpStatus.OK);
+        if (!order.isPresent())  {
+            // Order does not exist.
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }  else if (JwtAuthFilter.isLoggedUser(order.get().getBuyer().getId())) {
+            // Order existsis and claim created.
+            order.ifPresent(o -> claimService.createClaim(id, claim, o.getBuyer().getEmail()));
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            // Order exisits but belongs to other user.
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
     }
 
     private Order map(OrderDto dto) {
