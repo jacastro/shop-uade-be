@@ -27,7 +27,7 @@ public class ShopApplication {
                     .addFilterAfter(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers(HttpMethod.GET, "/").permitAll()
-                    .antMatchers(HttpMethod.GET, "/categories/", "/warranties/", "/items/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/categories/", "/warranties/", "/items/**", "/claims/orders/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/users").permitAll()
                     .antMatchers(HttpMethod.GET, "/v2/api-docs",
                             "/configuration/ui",
