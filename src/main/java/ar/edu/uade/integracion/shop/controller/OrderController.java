@@ -78,6 +78,11 @@ public class OrderController {
     @RequestMapping(value = "/orders/", method = RequestMethod.POST)
     public OrderDto createItem(@RequestBody OrderDto order) {
         if (JwtAuthFilter.isLoggedUser(order.getBuyerId())) {
+            Order o = map(order);
+            //Default  pickup point to seller's first address if not set by the buyer.
+            if (o.getAddress() == null ) {
+                o.setAddress(o.getItem().getSeller().getAddresses().get(0));
+            }
             return map(repository.save(map(order)));
         }
         throw new UserWithNoPermissionException();
