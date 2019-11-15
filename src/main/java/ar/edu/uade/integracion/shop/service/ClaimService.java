@@ -59,7 +59,7 @@ public class ClaimService {
 
             return externalClaims.stream().map(ec -> {
                 return new Claim(ec.getFecha(), ec.getDescripcion(),
-                        new ClaimStatus(ec.getEstado().getId(), ec.getEstado().getDescripcion()))
+                        new ClaimStatus(ec.getEstado().getId(), ec.getEstado().getDescripcion()), ec.getId())
                         ;
             }).collect(Collectors.toList());
 
@@ -75,6 +75,15 @@ final class ExternalClaim {
     private LocalDateTime fecha;
     private String descripcion;
     private ExternalCLaimStatus estado;
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public LocalDateTime getFecha() {
         return fecha;

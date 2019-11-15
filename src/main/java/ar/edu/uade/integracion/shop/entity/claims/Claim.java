@@ -6,11 +6,17 @@ public class Claim {
     private LocalDateTime date;
     private String description;
     private ClaimStatus statusList;
+    private Integer id;
 
-    public Claim(LocalDateTime date, String description, ClaimStatus statusList) {
+    public Claim(LocalDateTime date, String description, ClaimStatus statusList, Integer id) {
         this.date = date;
         this.description = description;
         this.statusList = statusList;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public LocalDateTime getDate() {

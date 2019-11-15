@@ -100,12 +100,12 @@ public class OrderController {
     @RequestMapping(value = "/orders/{id}/claim", method = RequestMethod.GET)
     public ResponseEntity getClaim(@PathVariable Integer id) {
         Optional<Order> order = repository.findById(id);
-        if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
-        if (JwtAuthFilter.isLoggedUser(order.get().getBuyer().getId())) {
+        //if (!order.isPresent()) return new ResponseEntity(HttpStatus.NOT_FOUND);
+        //if (JwtAuthFilter.isLoggedUser(order.get().getBuyer().getId())) {
             return ResponseEntity.of(Optional.of(claimService.getOrderClaims(id)));
-        }else{
+        /*}else{
             return new ResponseEntity(HttpStatus.FORBIDDEN);
-        }
+        }*/
     }
     private Order map(OrderDto dto) {
         Order model = new Order();
