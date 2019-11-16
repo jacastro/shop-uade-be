@@ -1,6 +1,9 @@
 package ar.edu.uade.integracion.shop.service;
 
+import ar.edu.uade.integracion.shop.entity.Address;
+import ar.edu.uade.integracion.shop.entity.AddressDto;
 import ar.edu.uade.integracion.shop.entity.Order;
+import ar.edu.uade.integracion.shop.entity.ShippingOrder;
 import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +32,32 @@ public class ShippingService {
     }
 
     public void sendOrder(Order order) {
-        ResponseEntity responseEntity = restTemplate.postForEntity(URL, order, Object.class);
+        ResponseEntity responseEntity = restTemplate.postForEntity(URL, map(order), Object.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             order.setShippingStatus("En proceso de envio");
             orderRepository.save(order);
         }
+    }
+
+    private ShippingOrder map(Order order){
+        ShippingOrder shippingOrder = new ShippingOrder();
+        shippingOrder.setAddress(map(order.getAddress()));
+        shippingOrder.setBuyerId(order.getBuyer().getId());
+        shippingOrder.setEmail(order.getBuyer().getEmail());
+        shippingOrder.setItemId(order.getItem().getId());
+        shippingOrder.setOrderId(order.getId());
+        shippingOrder.setQuantity(order.getQuantity());
+        shippingOrder.setWeight(order.getItem().getWeight());
+        return shippingOrder;
+    }
+
+    private AddressDto map(Address address) {
+        AddressDto dto = new AddressDto();
+        dto.setCity(address.getCity());
+        dto.setState(address.getState());
+        dto.setStreet(address.getStreet());
+        dto.setZipCode(address.getZipCode());
+        return dto;
     }
 
     @Scheduled(fixedRate = 600000) //10 mins
@@ -41,7 +65,7 @@ public class ShippingService {
         try {
             ftpClient.open();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ftpClient.getFile("ejemplo.csv", out);
+            ftpClient.getFile("/data.csv", out);
             updateOrders(getOrderStatusFromCsv(out.toByteArray()));
             ftpClient.close();
 

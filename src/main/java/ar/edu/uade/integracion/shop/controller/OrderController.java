@@ -12,6 +12,7 @@ import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
 import ar.edu.uade.integracion.shop.security.JwtAuthFilter;
 import ar.edu.uade.integracion.shop.service.ClaimService;
+import ar.edu.uade.integracion.shop.service.ShippingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,16 @@ public class OrderController {
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private ClaimService claimService;
+    private ShippingService shippingService;
 
     public OrderController(OrderRepository repository, ItemRepository itemRepository, UserRepository userRepository,
-                           AddressRepository addressRepository, ClaimService claimService) {
+                           AddressRepository addressRepository, ClaimService claimService, ShippingService shippingService) {
         this.repository = repository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.claimService = claimService;
+        this.shippingService = shippingService;
     }
 
     @ApiOperation(value = "Retrieves a specific order")
@@ -83,7 +86,9 @@ public class OrderController {
             if (o.getAddress() == null ) {
                 o.setAddress(o.getItem().getSeller().getAddresses().get(0));
             }
-            return map(repository.save(map(order)));
+            Order savedOrder = repository.save(map(order));
+            shippingService.sendOrder(savedOrder);
+            return map(savedOrder);
         }
         throw new UserWithNoPermissionException();
     }

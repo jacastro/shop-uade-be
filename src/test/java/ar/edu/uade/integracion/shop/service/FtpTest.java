@@ -2,12 +2,13 @@ package ar.edu.uade.integracion.shop.service;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-
+@Ignore
 public class FtpTest {
     FtpClient ftpClient;
 
@@ -25,7 +26,7 @@ public class FtpTest {
     @Test
     public void getFile() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ftpClient.getFile("/ejemplo.csv", out);
+        ftpClient.getFile("/data.csv", out);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(out.toByteArray());
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String line;
