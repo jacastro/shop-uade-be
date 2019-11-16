@@ -3,6 +3,9 @@ package ar.edu.uade.integracion.shop.controller;
 import ar.edu.uade.integracion.shop.entity.Category;
 import ar.edu.uade.integracion.shop.entity.Item;
 import ar.edu.uade.integracion.shop.entity.ItemDto;
+import ar.edu.uade.integracion.shop.entity.User;
+import ar.edu.uade.integracion.shop.exception.ItemCreationException;
+import ar.edu.uade.integracion.shop.exception.UserNotFoundException;
 import ar.edu.uade.integracion.shop.exception.UserWithNoPermissionException;
 import ar.edu.uade.integracion.shop.repository.ItemRepository;
 import ar.edu.uade.integracion.shop.repository.UserRepository;
@@ -102,7 +105,11 @@ public class ItemController {
         if (!JwtAuthFilter.isLoggedUser(model.getSeller().getId())) {
             throw new UserWithNoPermissionException();
         }
-        model.setId(null);
+        User loggedUser = userRepository.findById(JwtAuthFilter.getLoggedUserId()).orElseThrow(UserNotFoundException::new);
+        if (loggedUser.getAddresses().isEmpty()) {
+            throw new ItemCreationException();
+        }
+         model.setId(null);
         return mapper.map(repository.save(model), ItemDto.class);
     }
 

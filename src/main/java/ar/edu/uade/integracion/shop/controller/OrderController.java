@@ -3,6 +3,7 @@ package ar.edu.uade.integracion.shop.controller;
 import ar.edu.uade.integracion.shop.entity.Order;
 import ar.edu.uade.integracion.shop.entity.OrderDto;
 import ar.edu.uade.integracion.shop.entity.User;
+import ar.edu.uade.integracion.shop.exception.ShopException;
 import ar.edu.uade.integracion.shop.exception.UserNotFoundException;
 import ar.edu.uade.integracion.shop.exception.UserWithNoPermissionException;
 import ar.edu.uade.integracion.shop.repository.AddressRepository;
@@ -45,10 +46,13 @@ public class OrderController {
     @ApiOperation(value = "Retrieves a specific order")
     @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
     public ResponseEntity<OrderDto> getItem(@PathVariable Integer id) {
-        return repository.findById(id).map(o -> new ResponseEntity<>(map(o), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Order o = repository.findById(id).orElseThrow(ShopException::new);
+        if (JwtAuthFilter.isLoggedUser(o.getBuyer().getId())) {
+            return new ResponseEntity<OrderDto>(map(o), HttpStatus.OK);
+        } else {
+            throw new UserWithNoPermissionException();
+        }
     }
-
 
     @ApiOperation(value = "Retrieves the items purchased by a user")
     @RequestMapping(value = "/orders/buyer/{id}", method = RequestMethod.GET)
@@ -74,6 +78,11 @@ public class OrderController {
     @RequestMapping(value = "/orders/", method = RequestMethod.POST)
     public OrderDto createItem(@RequestBody OrderDto order) {
         if (JwtAuthFilter.isLoggedUser(order.getBuyerId())) {
+            Order o = map(order);
+            //Default  pickup point to seller's first address if not set by the buyer.
+            if (o.getAddress() == null ) {
+                o.setAddress(o.getItem().getSeller().getAddresses().get(0));
+            }
             return map(repository.save(map(order)));
         }
         throw new UserWithNoPermissionException();
