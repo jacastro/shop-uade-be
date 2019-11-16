@@ -5,25 +5,69 @@ import ar.edu.uade.integracion.shop.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class ShippingService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClaimService.class);
-    private final static String URL = "http://http://logistica-integracion.herokuapp.com/order/tienda/receive";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShippingService.class);
+    private static final String CVS_SEPARATOR = ",";
+    private final static String URL = "https://logistica-integracion.herokuapp.com/order/tienda/receive";
     private RestTemplate restTemplate;
     private OrderRepository orderRepository;
+    private FtpClient ftpClient;
 
     public ShippingService(OrderRepository orderRepository) {
-        restTemplate=new RestTemplate();
+        restTemplate = new RestTemplate();
         this.orderRepository = orderRepository;
+        ftpClient = new FtpClient("f24-preview.runhosting.com", 21, "3203234", "logistica123");
     }
 
-    public void sendOrder(Order order){
+    public void sendOrder(Order order) {
         ResponseEntity responseEntity = restTemplate.postForEntity(URL, order, Object.class);
-        if(responseEntity.getStatusCode().is2xxSuccessful()){
-            //save status new
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            order.setShippingStatus("En proceso de envio");
+            orderRepository.save(order);
         }
+    }
+
+    @Scheduled(fixedRate = 600000) //10 mins
+    public void getOrderStatus() {
+        try {
+            ftpClient.open();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ftpClient.getFile("ejemplo.csv", out);
+            updateOrders(getOrderStatusFromCsv(out.toByteArray()));
+            ftpClient.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateOrders(Map<Integer, String> orderStatusFromCsv) {
+        if(orderStatusFromCsv.isEmpty()) return;
+        Iterable<Order> orders = orderRepository.findAllById(orderStatusFromCsv.keySet());
+        orders.forEach(o -> o.setShippingStatus(orderStatusFromCsv.get(o.getId())));
+        orderRepository.saveAll(orders);
+    }
+
+    private Map<Integer, String> getOrderStatusFromCsv(byte[] file) throws IOException {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        Map<Integer, String> orderStatus = new HashMap<>();
+        br.readLine(); //headers
+        while ((line = br.readLine()) != null) {
+            String str[] = line.split(CVS_SEPARATOR);
+            orderStatus.put(Integer.valueOf(str[0]), str[1]);
+        }
+        return orderStatus;
     }
 }

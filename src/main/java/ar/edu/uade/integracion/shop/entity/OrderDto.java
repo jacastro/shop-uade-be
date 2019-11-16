@@ -17,6 +17,15 @@ public class OrderDto {
     private String buyerId;
     private Date date;
     private List<Claim> claims;
+    private String shippingStatus;
+
+    public String getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(String shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
 
     public List<Claim> getClaims() {
         return claims;

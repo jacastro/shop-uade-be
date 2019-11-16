@@ -20,6 +20,15 @@ public class Order {
     @OneToOne
     private User buyer;
     private Date date;
+    private String shippingStatus;
+
+    public String getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(String shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
 
     public Integer getId() {
         return id;
