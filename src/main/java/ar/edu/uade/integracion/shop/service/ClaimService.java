@@ -35,21 +35,12 @@ public class ClaimService {
     public void createClaim(Integer orderId, String userEmail, String claim, String userName) {
         NewClaim serviceNewClaim = new NewClaim(userEmail, claim, orderId, userName);
         try {
-            HttpEntity<NewClaim> entity = new HttpEntity<>(serviceNewClaim, getHeaders());
-            ResponseEntity response = restTemplate.postForEntity(URL, entity, Void.class);
+            ResponseEntity response = restTemplate.postForEntity(URL, serviceNewClaim, Object.class);
             LOGGER.info(response.toString());
         } catch (RestClientException e) {
             LOGGER.error("Exception while posting claim to external system: ", e);
             throw new ClaimException();
         }
-    }
-
-    private HttpHeaders getHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return headers;
     }
 
     public List<Claim> getOrderClaims(Integer orderId) {

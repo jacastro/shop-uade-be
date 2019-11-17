@@ -10,6 +10,15 @@ public class ShippingOrder {
     private String buyerId;
     private String email;
     private Double weight;
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public Integer getOrderId() {
         return orderId;

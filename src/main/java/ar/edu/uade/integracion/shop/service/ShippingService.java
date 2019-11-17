@@ -28,13 +28,14 @@ public class ShippingService {
     public ShippingService(OrderRepository orderRepository) {
         restTemplate = new RestTemplate();
         this.orderRepository = orderRepository;
-        ftpClient = new FtpClient("f24-preview.runhosting.com", 21, "3203234", "logistica123");
+        ftpClient = new FtpClient("f24-preview.runhosting.com", 21, "3203234_clientes", "clientes123");
     }
 
     public void sendOrder(Order order) {
-        ResponseEntity responseEntity = restTemplate.postForEntity(URL, map(order), Object.class);
+        ResponseEntity<ShippingOrder> responseEntity = restTemplate.postForEntity(URL, map(order), ShippingOrder.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            order.setShippingStatus("En proceso de envio");
+            ShippingOrder response = responseEntity.getBody();
+            order.setShippingStatus(response.getState());
             orderRepository.save(order);
         }
     }
