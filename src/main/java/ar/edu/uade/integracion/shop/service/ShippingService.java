@@ -61,7 +61,6 @@ public class ShippingService {
         return dto;
     }
 
-    @Scheduled(fixedRate = 600000) //10 mins
     public void getOrderStatus() {
         try {
             ftpClient.open();
