@@ -86,7 +86,7 @@ public class OrderController {
             if (o.getAddress() == null ) {
                 o.setAddress(o.getItem().getSeller().getAddresses().get(0));
             }
-            Order savedOrder = repository.save(map(order));
+            Order savedOrder = repository.save(o);
             shippingService.sendOrder(savedOrder);
             return map(savedOrder);
         }
