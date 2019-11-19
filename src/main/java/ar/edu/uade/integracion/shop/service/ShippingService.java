@@ -32,6 +32,7 @@ public class ShippingService {
     }
 
     public void sendOrder(Order order) {
+        if(order.getShippingId()==0) return;
         ResponseEntity<ShippingOrder> responseEntity = restTemplate.postForEntity(URL, map(order), ShippingOrder.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             ShippingOrder response = responseEntity.getBody();

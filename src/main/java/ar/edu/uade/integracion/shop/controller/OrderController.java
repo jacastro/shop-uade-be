@@ -84,6 +84,7 @@ public class OrderController {
             Order o = map(order);
             //Default  pickup point to seller's first address if not set by the buyer.
             if (o.getAddress() == null ) {
+                o.setShippingId(0);
                 o.setAddress(o.getItem().getSeller().getAddresses().get(0));
             }
             Order savedOrder = repository.save(o);
@@ -124,6 +125,7 @@ public class OrderController {
     private Order map(OrderDto dto) {
         Order model = new Order();
         if (dto.getAddress() != null) {
+            model.setShippingId(1);
             model.setAddress(addressRepository.findById(dto.getAddress()).orElseThrow(
                     RuntimeException::new));
         }
@@ -133,7 +135,6 @@ public class OrderController {
         model.setItem(itemRepository.findById(dto.getItemId()).orElseThrow(
                 RuntimeException::new));
         model.setQuantity(dto.getQuantity());
-        //model.setShippingId(); -> hay que llamar al servicio de los otros pibes
         model.setTotal(model.getItem().getPrice() * model.getQuantity());
 
         return model;
