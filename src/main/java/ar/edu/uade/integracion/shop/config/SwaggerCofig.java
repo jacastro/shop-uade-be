@@ -25,7 +25,7 @@ public class SwaggerCofig {
     @Bean
     public Docket api() {
         List<SecurityScheme> schemeList = new ArrayList<>();
-        schemeList.add(new ApiKey(HttpHeaders.AUTHORIZATION, "jwt", "header"));
+        schemeList.add(new ApiKey(HttpHeaders.AUTHORIZATION, "Authorization", "header"));
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ar.edu.uade.integracion.shop.controller"))
