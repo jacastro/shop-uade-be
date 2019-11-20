@@ -19,7 +19,7 @@ import java.util.Map;
 @Service
 public class ShippingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShippingService.class);
-    private static final String CVS_SEPARATOR = ";";
+    private static final String CVS_SEPARATOR = ",";
     private final static String URL = "https://logistica-integracion.herokuapp.com/order/tienda/receive";
     private RestTemplate restTemplate;
     private OrderRepository orderRepository;
@@ -91,7 +91,7 @@ public class ShippingService {
         br.readLine(); //headers
         while ((line = br.readLine()) != null) {
             String str[] = line.split(CVS_SEPARATOR);
-            orderStatus.put(Integer.valueOf(str[0]), str[1]);
+            orderStatus.put(Integer.valueOf(str[0]), str[1].replaceAll("^\"|\"$", ""));
         }
         return orderStatus;
     }
